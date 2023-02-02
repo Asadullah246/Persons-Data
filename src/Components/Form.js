@@ -1,51 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query'
 import emailjs from '@emailjs/browser';
 
 
 const Form = () => {
+    const [message, setMessage]=useState("");
     const { register, handleSubmit, formState: { errors }, } = useForm();
-
     const submitData = async (data) => {
-        // await fetch('http://localhost:5000/persons', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => console.log("data", data))
-        //     .catch(err => console.log(err))
+        await fetch('http://localhost:5000/persons', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => setMessage("Successfully added"))
+            .catch(err => setMessage(err.message))
 
-        const templateParams = {
-            name: data.name,
-            email: data.email,
-            toEmail: "asadullahmd242@gmail.com",
-            phone: data.number,
-            hobbies: data.hobbies,
-        };
+    //     const templateParams = {
+    //         name: data.name,
+    //         email: data.email,
+    //         toEmail: "asadullahmd242@gmail.com",
+    //         phone: data.number,
+    //         hobbies: data.hobbies,
+    //     };
 
 
-       await emailjs.send('service_241zrmv', 'template_u8hhogh', templateParams, 'RfpSlyoQDXNOWTQGE')
-            .then((response) => {
-                console.log("Message sent successfully")
-                // setError("")
-            }, (err) => {
-                console.log(err);
-            })
+    //    await emailjs.send('service_241zrmv', 'template_u8hhogh', templateParams, 'RfpSlyoQDXNOWTQGE')
+    //         .then((response) => {
+    //             setMessage("Message sent successfully")
+               
+    //         }, (err) => {
+    //            setMessage(err?.message)
+    //         })
     }
 
     return (
         <div>
-            {/* <!-- The button to open modal --> */}
-
-
-            {/* <!-- Put this part before </body> tag --> */}
             <input type="checkbox" id="my-modal-3" class="modal-toggle" />
             <div class="modal">
                 <div class="modal-box relative">
+                <h1 className='uppercase text-3xl font-bold my-6'>add new data</h1>
                     <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                     <form onSubmit={handleSubmit(submitData)}>
                         <div className="form-control w-full ">
@@ -108,8 +105,8 @@ const Form = () => {
                                 {errors.hobbies?.type === 'required' && <span className="label-text-alt text-red-500">{errors.hobbies.message}</span>}
                             </label>
                         </div>
-
-                        <button type='submit'>Submit</button>
+                                <p className='my-2'> {message}</p>
+                        <button type='submit' className='btn  py-2 px-10  modal-button'>Submit</button>
                     </form>
                 </div>
             </div>
